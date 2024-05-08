@@ -1,35 +1,36 @@
+import { useRegister } from "@/features/auth";
+import { RegisterForm } from "@/features/auth/components";
+import {
+  RegisterFormValues,
+  registerFormSchema,
+} from "@/features/auth/forms/register";
 import {
   Box,
   Center,
   HStack,
   Heading,
-  VStack,
   Text,
+  VStack,
 } from "@gluestack-ui/themed";
-import { Link } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { LoginForm } from "@/features/auth/components/LoginForm";
-import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { LoginFormValues, loginFormSchema } from "@/features/auth/forms/login";
-import { useLogin } from "@/features/auth";
 import { AxiosError } from "axios";
-import { useStore } from "@/store";
+import { Link, router } from "expo-router";
+import { FormProvider, useForm } from "react-hook-form";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
-const LoginScreen = () => {
-  const { onAuthSuccess } = useStore();
-  const { mutateAsync, isPending } = useLogin();
-  const formMethods = useForm<LoginFormValues>({
+const RegisterScreen = () => {
+  const { mutateAsync, isPending } = useRegister();
+  const formMethods = useForm<RegisterFormValues>({
     defaultValues: {
       email: "",
       password: "",
     },
-    resolver: zodResolver(loginFormSchema),
+    resolver: zodResolver(registerFormSchema),
     mode: "onChange",
   });
 
-  const onLoginSubmit = async (values: LoginFormValues) => {
+  const onRegisterSubmit = async (values: RegisterFormValues) => {
     try {
       const response = await mutateAsync(values);
       Toast.show({
@@ -37,12 +38,12 @@ const LoginScreen = () => {
         text1: "Success",
         text2: response.data.message,
       });
-      onAuthSuccess(response.data.data);
+      router.replace("/login");
     } catch (error) {
       if (error instanceof AxiosError) {
         Toast.show({
           type: "error",
-          text1: "Login failed",
+          text1: "Register failed",
           text2: `Something went wrong, ${error.response?.data.message}`,
         });
       }
@@ -54,24 +55,24 @@ const LoginScreen = () => {
     <SafeAreaView>
       <Center h="$full">
         <Box w="90%">
-          <Heading color="$trueGray900">Welcome</Heading>
+          <Heading color="$trueGray900">Sign up</Heading>
           <Heading color="$trueGray900" size="sm" fontWeight="$medium">
-            Sign in to continue!
+            Register new account to continue!
           </Heading>
           <VStack gap="$5" mt="$5">
             <FormProvider {...formMethods}>
-              <LoginForm
-                onLoginSubmit={formMethods.handleSubmit(onLoginSubmit)}
+              <RegisterForm
+                onRegisterSubmit={formMethods.handleSubmit(onRegisterSubmit)}
                 isPending={isPending}
               />
             </FormProvider>
             <HStack space="xs" justifyContent="center">
               <Text color="$trueGray600" size="sm">
-                I&apos;am a new user.
+                Already have an account?
               </Text>
-              <Link href="/register" replace asChild>
+              <Link href="/login" replace asChild>
                 <Text color="$trueGray600" size="sm" fontWeight="$medium">
-                  Make an account
+                  Sign in
                 </Text>
               </Link>
             </HStack>
@@ -82,4 +83,4 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
+export default RegisterScreen;
