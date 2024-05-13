@@ -1,4 +1,5 @@
 import { StateCreator } from "zustand";
+import { CooldownSlice } from "./cooldown";
 
 interface AuthUser {
   userId: string;
@@ -18,16 +19,23 @@ export interface AuthSlice {
     user: AuthUser;
     accessToken: string;
   }) => void;
+  onProfileUpdate: (user: AuthUser) => void;
   onLogout: () => void;
 }
 
-export const createAuthSlice: StateCreator<AuthSlice, [], [], AuthSlice> = (
-  set
-) => ({
+export const createAuthSlice: StateCreator<
+  AuthSlice & CooldownSlice,
+  [],
+  [],
+  AuthSlice
+> = (set) => ({
   user: null,
   accessToken: null,
   onAuthSuccess: (payload) => {
     set(() => ({ ...payload }));
+  },
+  onProfileUpdate: (user: AuthUser) => {
+    set(() => ({ user }));
   },
   onLogout: () => {
     set(() => ({ user: null, accessToken: null }));

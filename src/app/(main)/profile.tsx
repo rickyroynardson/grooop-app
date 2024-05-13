@@ -15,7 +15,12 @@ import {
 import { Link } from "expo-router";
 
 const ProfileScreen = () => {
-  const { user, onLogout } = useStore();
+  const { user, onLogout, onSetCooldown } = useStore();
+
+  const handleLogout = () => {
+    onSetCooldown("");
+    onLogout();
+  };
 
   return (
     <ScrollView p="$4">
@@ -37,17 +42,19 @@ const ProfileScreen = () => {
                 <Badge borderRadius="$md" action="muted">
                   <BadgeText>Unverified</BadgeText>
                 </Badge>
-                <Link href="/">
+                <Link href="/profile/verification">
                   <LinkText fontSize="$sm">Verify email</LinkText>
                 </Link>
               </>
             )}
           </HStack>
         </Box>
-        <Button variant="solid" bg="$trueGray400" $active-bg="$trueGray600">
-          <ButtonText>Update profile</ButtonText>
-        </Button>
-        <Button action="negative" onPress={onLogout}>
+        <Link href="/profile/update" asChild>
+          <Button variant="solid" bg="$trueGray400" $active-bg="$trueGray600">
+            <ButtonText>Update profile</ButtonText>
+          </Button>
+        </Link>
+        <Button action="negative" onPress={handleLogout}>
           <ButtonText>Sign out</ButtonText>
         </Button>
       </VStack>

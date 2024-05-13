@@ -25,6 +25,14 @@ const RootLayout = () => {
           <Stack>
             <Stack.Screen name="(main)" options={{ headerShown: false }} />
             <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="profile/verification"
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="profile/update"
+              options={{ title: "Update Profile", headerBackTitle: "Back" }}
+            />
           </Stack>
           <Toast position="bottom" />
         </GluestackUIProvider>
