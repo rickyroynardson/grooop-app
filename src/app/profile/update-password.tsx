@@ -1,31 +1,30 @@
-import { EditProfileForm } from "@/features/profile/components";
+import { useEditPassword } from "@/features/profile";
+import { EditPasswordForm } from "@/features/profile/components/EditPasswordForm";
 import {
-  EditProfileFormValues,
-  editProfileFormSchema,
-} from "@/features/profile/forms/edit-profile";
-import { useEditProfile } from "@/features/profile";
-import { useStore } from "@/store";
+  EditPasswordFormValues,
+  editPasswordFormSchema,
+} from "@/features/profile/forms/edit-password";
 import { ScrollView } from "@gluestack-ui/themed";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError } from "axios";
+import { router } from "expo-router";
 import { FormProvider, useForm } from "react-hook-form";
 import Toast from "react-native-toast-message";
 
-const ProfileUpdateScreen = () => {
-  const { user, onProfileUpdate } = useStore();
-  const { mutateAsync, isPending } = useEditProfile();
+const ProfileUpdatePasswordScreen = () => {
+  const { mutateAsync, isPending } = useEditPassword();
 
-  const formMethods = useForm<EditProfileFormValues>({
+  const formMethods = useForm<EditPasswordFormValues>({
     defaultValues: {
-      firstName: user?.firstName || "",
-      lastName: user?.lastName || "",
-      email: user?.email || "",
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
     },
-    resolver: zodResolver(editProfileFormSchema),
+    resolver: zodResolver(editPasswordFormSchema),
     mode: "onChange",
   });
 
-  const onEditProfileSubmit = async (values: EditProfileFormValues) => {
+  const onEditPasswordSubmit = async (values: EditPasswordFormValues) => {
     try {
       const response = await mutateAsync(values);
       Toast.show({
@@ -33,7 +32,7 @@ const ProfileUpdateScreen = () => {
         text1: "Success",
         text2: response.data.message,
       });
-      onProfileUpdate(response.data.data);
+      router.navigate("/profile");
     } catch (error) {
       if (error instanceof AxiosError) {
         Toast.show({
@@ -49,8 +48,8 @@ const ProfileUpdateScreen = () => {
   return (
     <ScrollView p="$4">
       <FormProvider {...formMethods}>
-        <EditProfileForm
-          onEditProfileSubmit={formMethods.handleSubmit(onEditProfileSubmit)}
+        <EditPasswordForm
+          onEditPasswordSubmit={formMethods.handleSubmit(onEditPasswordSubmit)}
           isPending={isPending}
         />
       </FormProvider>
@@ -58,4 +57,4 @@ const ProfileUpdateScreen = () => {
   );
 };
 
-export default ProfileUpdateScreen;
+export default ProfileUpdatePasswordScreen;

@@ -17,10 +17,12 @@ import { FormControlHelperText } from "@gluestack-ui/themed";
 
 interface EditProfileFormProps {
   onEditProfileSubmit: () => void;
+  isPending: boolean;
 }
 
 export const EditProfileForm: React.FC<EditProfileFormProps> = ({
   onEditProfileSubmit,
+  isPending,
 }) => {
   const { formState, setValue } = useFormContext<EditProfileFormValues>();
 
@@ -87,6 +89,7 @@ export const EditProfileForm: React.FC<EditProfileFormProps> = ({
         bg="$blue600"
         $active-bg="$blue800"
         onPress={onEditProfileSubmit}
+        isDisabled={isPending}
       >
         <ButtonText>Save</ButtonText>
       </Button>

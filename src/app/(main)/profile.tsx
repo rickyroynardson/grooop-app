@@ -54,6 +54,11 @@ const ProfileScreen = () => {
             <ButtonText>Update profile</ButtonText>
           </Button>
         </Link>
+        <Link href="/profile/update-password" asChild>
+          <Button variant="solid" bg="$trueGray400" $active-bg="$trueGray600">
+            <ButtonText>Update Password</ButtonText>
+          </Button>
+        </Link>
         <Button action="negative" onPress={handleLogout}>
           <ButtonText>Sign out</ButtonText>
         </Button>

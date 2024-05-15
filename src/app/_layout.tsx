@@ -33,6 +33,10 @@ const RootLayout = () => {
               name="profile/update"
               options={{ title: "Update Profile", headerBackTitle: "Back" }}
             />
+            <Stack.Screen
+              name="profile/update-password"
+              options={{ title: "Update Password", headerBackTitle: "Back" }}
+            />
           </Stack>
           <Toast position="bottom" />
         </GluestackUIProvider>
